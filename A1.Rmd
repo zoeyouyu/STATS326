@@ -1,0 +1,25 @@
+---
+title: "A1"
+author: "Zoe Zhou"
+date: "17/03/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Question 1
+Find a Time Series that exhibites cycles. 
+
+### Question 2
+Find a Stationary Time Series.
+
+### Question 3
+Find a Time Series that has a seasonal component but no trend or cycle. 
+
+### Question 4
+Find a Time Series that ...
+
+### Question 5
+
