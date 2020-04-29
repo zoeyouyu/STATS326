@@ -1,26 +1,102 @@
 ---
-title: "A1"
+title: "STATS 326 A1"
 author: "Zoe Zhou"
-date: "17/03/2020"
-output: pdf_document
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
-```{r setup, include=FALSE}
+
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Question 1
-Find a Time Series that exhibites cycles. 
+### Question 1. Find a Time Series that exhibites cycles. 
+```{r include = FALSE, echo = FALSE}
+library(fpp2)
+head(lynx)
+```
 
-### Question 2
-Find a Stationary Time Series.
+```{r echo = FALSE}
+plot(lynx, main = "Number of lynx trapped each year in Canada (1821-1934)",
+     xlab = "Year", ylab = "Number of lynx trapped")
+```
 
-### Question 3
-Find a Time Series that has a seasonal component but no trend or cycle. 
+#### Comment
+The time series is the number of lynx trapped each year in the McKenzie river district of northwest Canada (1821-1934). Found in https://robjhyndman.com/hyndsight/cyclicts/. 
 
-### Question 4
-Find a Time Series that ...
+The number of lynx trapped each year seemed to have irregular cycle patterns. The length or amplitude of these cycles are not fixed or predictable.  
 
-### Question 5
-hi
+\pagebreak
+### Question 2. Find a Stationary Time Series.
+```{r echo = FALSE}
+femaleBirth = read.csv("https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-total-female-births.csv")
+femaleBirthts = ts(femaleBirth$Births, start = c(1959, 1), frequency = 365)
+
+plot(femaleBirthts,  main = "Daily Female Births in California in 1959", 
+     xlab = "Time", ylab = "Births")
+```
+
+#### Comment
+This time series describes the number of daily female births in California in year 1959. The units are a count and there are 365 observations. The source of the dataset is credited to Newton (1988) https://machinelearningmastery.com/time-series-datasets-for-machine-learning/. 
+
+The daily female births seemed to have a constant mean and constant variance through time. There is no trend or cycle or seasonal pattern in the plot. We can say it is stationary.  
+
+\pagebreak
+### Question 3. Find a Time Series that has a seasonal component but no trend or cycle.
+```{r echo = FALSE}
+minimum_daily_temp = read.csv("https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-min-temperatures.csv")
+ts2 = ts(minimum_daily_temp$Temp, start = 1981, frequency = 365)
+
+plot(ts2, main = "Minimum Daily Temperatures (1981-1990) in Melbourne", 
+     xlab = "Year", ylab = "Temp (C)")
+```
+
+#### Comment
+This time series describes the minimum daily temperatures over 10 years (1981-1990) in Melbourne, Australia. The units are in degrees Celsius and there are 3650 observations. The source of the data is credited as the Australian Bureau of Meteorology. Found on website https://machinelearningmastery.com/time-series-datasets-for-machine-learning/.
+
+The minimum daily temperature showed a strong seasonality component. We can see peaks approximately at the beginning of each year (summer) and valleys in the middle of the year (winter). There is no trend or cycle.  
+
+\pagebreak
+### Question 4. Find a Time Series that has a reasonably linear trend and a seasonal component. 
+```{r echo = FALSE}
+souvenir = scan("http://robjhyndman.com/tsdldata/data/fancy.dat")
+souvenirts = ts(souvenir, frequency = 12, start = c(1987, 1))
+
+plot(souvenirts, main = "Monthly Souvenir Sale (1987-1993) in Queensland", 
+     xlab = "Year", ylab = "Souvenir Sales")
+```
+
+#### Comment
+We are using data that is monthly sales for a souvenir shop at a beach resort town in Queensland, Australia, for January 1987 - December 1993 (original data from Wheelwright and Hyndman, 1998). Found http://robjhyndman.com/tsdldata/data/fancy.dat. 
+
+We can see the time series clearly has a strong seasonal component around the end of each year. The peaks occurred probably in summer, the tourism season. We can see the sales was increasing drastically each year showing a positive linear trend.  
+
+\pagebreak
+### Question 5.
+```{r echo = FALSE}
+CO2.df = read.table(list.files(pattern = "2000.1"), header = TRUE)
+CO2.ts = ts(CO2.df$CO2, frequency = 12, start = 2000)
+```
+
+```{r echo = FALSE}
+plot(CO2.ts, xlab = "Year", 
+     ylab = "Concentration of CO2", 
+     main = "Monthly Average of CO2 at Cape Grim")
+```
+
+### Convert the data into the average concentration of CO2 in the atmosphere for each quarter from 2000 to 2019.
+```{r}
+CO2.ts2 = aggregate(CO2.ts, nfrequency = 4, FUN = mean)
+```
+
+```{r echo = FALSE}
+plot(CO2.ts2, xlab = "Year", 
+     ylab = "Concentration of CO2", 
+     main = "Quarterly Average of CO2 at Cape Grim")
+```
+
+#### Comment
+The time series describes the average concentration of CO2 in the atmosphere at Cape Grim, Tasmania, Australia (2000-2019). The average concentration of CO2 has been increasing steadily each year. It is showing a clear positive linear trend over 20 years with a weak seasonal component. The quarterly average seems smoother than the monthly average with very similar patterns. We can see small peaks and valleys around the same time each year. 
 

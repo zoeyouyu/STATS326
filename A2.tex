@@ -1,0 +1,463 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={A2},
+            pdfauthor={Zoe Zhou},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{A2}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Zoe Zhou}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{29/03/2020}
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{question-1.-use-the-holt-winters-technique-to-build-a-model.}{%
+\subsubsection{Question 1. Use the Holt-Winters technique to build a
+model.}\label{question-1.-use-the-holt-winters-technique-to-build-a-model.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{HW.CO2 =} \KeywordTok{HoltWinters}\NormalTok{(reduced.CO2.ts))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Holt-Winters exponential smoothing with trend and additive seasonal component.
+## 
+## Call:
+## HoltWinters(x = reduced.CO2.ts)
+## 
+## Smoothing parameters:
+##  alpha: 0.9267355
+##  beta : 0.0813906
+##  gamma: 1
+## 
+## Coefficients:
+##           [,1]
+## a  405.1011655
+## b    0.5889777
+## s1   0.2311236
+## s2  -0.2791367
+## s3  -0.2150001
+## s4   0.4588345
+\end{verbatim}
+
+\hypertarget{prediction}{%
+\paragraph{Prediction}\label{prediction}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Predict for the next 4 quarters}
+\NormalTok{(}\DataTypeTok{HW.CO2.pred =} \KeywordTok{predict}\NormalTok{(HW.CO2, }\DataTypeTok{n.ahead =} \DecValTok{4}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          Qtr1     Qtr2     Qtr3     Qtr4
+## 2018                            405.9213
+## 2019 406.0000 406.6531 407.9159
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Compare to actual values}
+\NormalTok{(}\DataTypeTok{actual =}\NormalTok{ CO2.ts[(}\KeywordTok{length}\NormalTok{(CO2.ts) }\OperatorTok{-}\StringTok{ }\DecValTok{3}\NormalTok{)}\OperatorTok{:}\KeywordTok{length}\NormalTok{(CO2.ts)])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 405.83 405.73 406.71 408.25
+\end{verbatim}
+
+\hypertarget{rmsep}{%
+\paragraph{RMSEP}\label{rmsep}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{RMSEP.HW.pred =} \KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\DecValTok{4} \OperatorTok{*}\StringTok{ }\KeywordTok{sum}\NormalTok{((actual }\OperatorTok{-}\StringTok{ }\NormalTok{HW.CO2.pred) }\OperatorTok{^}\StringTok{ }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.2214015
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(HW.CO2, HW.CO2.pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{A2_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\hypertarget{comment}{%
+\paragraph{Comment:}\label{comment}}
+
+The model did a pretty good job at prediction as we can see very small
+differences between the predicted and actual line. The predicted values
+are very close to the actual values. The prediction error is pretty
+small (0.2214 ppm).
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{question-2.-using-the-de-seasonalising-techniques-moving-averages-and-seasonal-trend-lowess-build-seasonally-adjusted-models-of-the-data-2000-to-2018.3.}{%
+\subsubsection{Question 2. Using the de-seasonalising techniques (Moving
+Averages and Seasonal Trend Lowess), build Seasonally Adjusted models of
+the data (2000 to
+2018.3).}\label{question-2.-using-the-de-seasonalising-techniques-moving-averages-and-seasonal-trend-lowess-build-seasonally-adjusted-models-of-the-data-2000-to-2018.3.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#### Seasonal Tread Lowess}
+\CommentTok{# Seasonal estimates}
+\NormalTok{decomp.stl.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{1}\OperatorTok{:}\DecValTok{4}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.3906880 -0.3028320  0.4787971  0.2147230
+\end{verbatim}
+
+\hypertarget{comment-1}{%
+\paragraph{Comment:}\label{comment-1}}
+
+The seasonal estimates from stl decomposition are showed above. We can
+see that, on average Quarter 1 has the smallest value of CO2
+concentration while Quarter 3 has the largest.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Subtract seasonal component}
+\NormalTok{stl.sa.CO2.ts =}\StringTok{ }\NormalTok{reduced.CO2.ts }\OperatorTok{-}\StringTok{ }\NormalTok{decomp.stl.CO2}\OperatorTok{$}\NormalTok{time.series[, }\DecValTok{1}\NormalTok{]}
+\KeywordTok{plot}\NormalTok{(stl.sa.CO2.ts, }\DataTypeTok{main =} \StringTok{"STL seasonally adjusted Cape Grim CO2"}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"Quarter"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"CO2 (ppm)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{A2_files/figure-latex/unnamed-chunk-26-1.pdf}
+
+\hypertarget{comment-2}{%
+\paragraph{Comment:}\label{comment-2}}
+
+After removing the seasonal components, we can see a clear positive
+linear trend. Interestingly there are some small bumps in the data. We
+possibly have a ``break'' - change in slope somehwere around 2010.
+
+\hypertarget{fit-the-best-predicting-model.}{%
+\paragraph{Fit the best predicting
+model.}\label{fit-the-best-predicting-model.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stl.CO2.fit3 =}\StringTok{ }\KeywordTok{lm}\NormalTok{(stl.sa.CO2.ts[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{~}\StringTok{ }\NormalTok{Time[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{Time.break[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{stl.sa.CO2.ts[}\OperatorTok{-}\DecValTok{75}\NormalTok{])}
+\KeywordTok{summary}\NormalTok{(stl.CO2.fit3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stl.sa.CO2.ts[-1] ~ Time[-1] + Time.break[-1] + 
+##     stl.sa.CO2.ts[-75])
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.51687 -0.13691  0.01665  0.11813  0.51237 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)        113.68138   29.12337   3.903 0.000216 ***
+## Time[-1]             0.15131    0.03826   3.955 0.000181 ***
+## Time.break[-1]       0.04304    0.01189   3.620 0.000554 ***
+## stl.sa.CO2.ts[-75]   0.68994    0.07972   8.654 1.14e-12 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.189 on 70 degrees of freedom
+## Multiple R-squared:  0.9997, Adjusted R-squared:  0.9997 
+## F-statistic: 8.543e+04 on 3 and 70 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\hypertarget{prediction-1}{%
+\paragraph{Prediction}\label{prediction-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t76.sa.pred =}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{76} \OperatorTok{+}
+\StringTok{          }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{76} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{stl.sa.CO2.ts[}\DecValTok{76} \OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\NormalTok{t76.pred =}\StringTok{ }\NormalTok{t76.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.stl.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{4}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+\NormalTok{t77.sa.pred =}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{77} \OperatorTok{+}
+\StringTok{          }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{77} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{t76.sa.pred}
+\NormalTok{t77.pred =}\StringTok{ }\NormalTok{t77.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.stl.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+
+\NormalTok{t78.sa.pred =}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{78} \OperatorTok{+}
+\StringTok{          }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{78} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{t77.sa.pred}
+\NormalTok{t78.pred =}\StringTok{ }\NormalTok{t78.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.stl.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+
+\NormalTok{t79.sa.pred =}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{79} \OperatorTok{+}
+\StringTok{          }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{79} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{stl.CO2.fit3}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{t78.sa.pred}
+\NormalTok{t79.pred =}\StringTok{ }\NormalTok{t79.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.stl.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+\NormalTok{stl.pred =}\StringTok{ }\KeywordTok{c}\NormalTok{(t76.pred, t77.pred, t78.pred, t79.pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{calculate-rmsep-to-compare-actual-values-and-predicted-values}{%
+\paragraph{Calculate RMSEP to compare actual values and predicted
+values}\label{calculate-rmsep-to-compare-actual-values-and-predicted-values}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DataTypeTok{RMSEP.stl.pred =} \KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\DecValTok{4} \OperatorTok{*}\StringTok{ }\KeywordTok{sum}\NormalTok{((actual }\OperatorTok{-}\StringTok{ }\NormalTok{stl.pred) }\OperatorTok{^}\StringTok{ }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1951761
+\end{verbatim}
+
+\hypertarget{question-3.-technical-notes.}{%
+\subsubsection{Question 3. Technical
+Notes.}\label{question-3.-technical-notes.}}
+
+The seasonal estimates show that for the last 2 quarters, the CO2
+concentration is above the overall trend with Quarter 3 being the
+largest(0.48 ppm). And for the first 2 quarters, the CO2 concentration
+is below the overall trend with Quarter 1 being the lowest (-0.39 ppm).
+
+The plot of the seasonally adjusted data shows a clear positive linear
+trend. Interestingly there is a ``break'' - change in slope somehwere
+around 2010.
+
+The final model included a Time variable for the linear trend, a Time
+break variable for the change in slope and a lagged response variable to
+deal with the autocorrelation found in the residual series.
+
+For the final model, the plot of the autocorrelation function of the
+residuals still shows lags 1, 11 and 16 are slightly significant. It is
+ok to ignore them as they are small.
+
+The residual series shows no evidence of non-linearity. There is no
+evidence against the underlying errors having come from a noraml
+distribution (P-value = 0.834). So our residual series is normally
+distributed.
+
+All variables (time, time break and lagged response) in the model are
+highly significant with P-values almost close to 0. The F-statistic
+(P-value ≈ 0) also showed at least one of the variables is significantly
+important.
+
+The Multiple R2 is 0.9997 indicating that nearly 99.97\% the variation
+in the seasonally adjusted CO2 concentration is explained by the model.
+The model is a good fit. The residual standard error is 0.189 ppm so
+prediction intervals will be narrow. The model predictions can be relied
+on as the assumptions appear to be satisfied.
+
+The RMSEP for the 2018.4-2019.3 predictions was 0.195 which was smaller
+than that for the moving average model (0.233).
+
+Predictions are 2018.4: 406.00 ppm, 2019.1: 406.07 ppm, 2019.2 406.82
+ppm, 2019.3: 408.25 ppm.
+
+\hypertarget{question-4.-use-full-data-and-predict-for-the-4-quarters-of-2019.4-to-2020.3.}{%
+\subsubsection{Question 4. Use full data and predict for the 4 quarters
+of 2019.4 to
+2020.3.}\label{question-4.-use-full-data-and-predict-for-the-4-quarters-of-2019.4-to-2020.3.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CO2.fit4 =}\StringTok{ }\KeywordTok{lm}\NormalTok{(sa.CO2.ts[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{~}\StringTok{ }\NormalTok{Time.new[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{Time.break.new[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{sa.CO2.ts[}\OperatorTok{-}\DecValTok{79}\NormalTok{])}
+
+\CommentTok{# Predict}
+\NormalTok{t80.sa.pred =}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{80} \OperatorTok{+}
+\StringTok{          }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{80} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{sa.CO2.ts[}\DecValTok{79}\NormalTok{]}
+
+\NormalTok{t80.pred =}\StringTok{ }\NormalTok{t80.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{4}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+\NormalTok{t81.sa.pred =}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{81} \OperatorTok{+}
+\StringTok{          }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{81} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{t80.sa.pred}
+\NormalTok{t81.pred =}\StringTok{ }\NormalTok{t81.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+
+\NormalTok{t82.sa.pred =}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{82} \OperatorTok{+}
+\StringTok{          }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{82} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{t81.sa.pred}
+\NormalTok{t82.pred =}\StringTok{ }\NormalTok{t82.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+
+\NormalTok{t83.sa.pred =}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{83} \OperatorTok{+}
+\StringTok{          }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{83} \OperatorTok{-}\StringTok{ }\DecValTok{50}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{CO2.fit4}\OperatorTok{$}\NormalTok{coef[}\DecValTok{4}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{t82.sa.pred}
+\NormalTok{t83.pred =}\StringTok{ }\NormalTok{t83.sa.pred }\OperatorTok{+}\StringTok{ }\NormalTok{decomp.CO2}\OperatorTok{$}\NormalTok{time.series[}\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+\NormalTok{pred =}\StringTok{ }\KeywordTok{c}\NormalTok{(t80.pred, t81.pred, t82.pred, t83.pred)}
+
+\KeywordTok{names}\NormalTok{(pred) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"2019.4"}\NormalTok{,}\StringTok{"2020.1"}\NormalTok{,}\StringTok{"2020.2"}\NormalTok{,}\StringTok{"2020.3"}\NormalTok{)}
+
+\NormalTok{pred}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   2019.4   2020.1   2020.2   2020.3 
+## 408.5988 408.6075 409.3381 410.7559
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(CO2.fit4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = sa.CO2.ts[-1] ~ Time.new[-1] + Time.break.new[-1] + 
+##     sa.CO2.ts[-79])
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.5294 -0.1417  0.0186  0.1271  0.5095 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)        114.64012   28.54054   4.017 0.000140 ***
+## Time.new[-1]         0.15269    0.03754   4.067 0.000118 ***
+## Time.break.new[-1]   0.04254    0.01109   3.837 0.000260 ***
+## sa.CO2.ts[-79]       0.68731    0.07813   8.797 4.02e-13 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1896 on 74 degrees of freedom
+## Multiple R-squared:  0.9998, Adjusted R-squared:  0.9997 
+## F-statistic: 1.016e+05 on 3 and 74 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\hypertarget{comment-3}{%
+\paragraph{Comment:}\label{comment-3}}
+
+The model including the full data's Multiple R-squared is nearly 1
+(0.9998). The residual standard error is small (0.1896 ppm) so the
+prediction intervals will be very narrow. The predictions should be
+reliable.
+
+
+\end{document}
