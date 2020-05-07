@@ -1,0 +1,417 @@
+---
+title: "A3"
+author: "Zoe Zhou"
+date: "29/04/2020"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+```{r include = FALSE}
+### Prepare data
+CO2.df = read.table(list.files(pattern = "quarterly"), header = TRUE)
+CO2.ts = ts(CO2.df$CO2, frequency = 4, start = 2000)
+```
+
+
+```{r include = FALSE}
+# Reduced data frame - training set, drop the last 4 observations
+reduced.CO2.ts = ts(CO2.df$CO2[1:(length(CO2.df$CO2) - 4)], frequency = 4, start = 2000)
+```
+
+### Question 1. Use the Holt-Winters technique to build a model.
+```{r}
+(HW.CO2 = HoltWinters(reduced.CO2.ts))
+```
+
+#### Prediction
+```{r}
+# Predict for the next 4 quarters
+(HW.CO2.pred = predict(HW.CO2, n.ahead = 4))
+```
+
+
+```{r}
+# Compare to actual values
+(actual = CO2.ts[(length(CO2.ts) - 3):length(CO2.ts)])
+```
+
+#### RMSEP
+```{r}
+(RMSEP.HW.pred = sqrt(1/4 * sum((actual - HW.CO2.pred) ^ 2)))
+```
+
+
+```{r}
+plot(HW.CO2, HW.CO2.pred)
+```
+
+#### Comment:
+The model did a pretty good job at prediction as we can see very small differences between the predicted and actual line. The predicted values are very close to the actual values. The prediction error is pretty small (0.2214 ppm).
+
+***
+### Question 2. Using the de-seasonalising techniques (Moving Averages and Seasonal Trend Lowess), build Seasonally Adjusted models of the data (2000 to 2018.3). 
+
+
+```{r include=FALSE}
+#### Use Moving Average to de-seasonalise data
+#### USE reduced.CO2.ts!!!!!!!!!!!
+decomp.ma.CO2 = decompose(reduced.CO2.ts)
+# Seasonal components
+decomp.ma.CO2$figure
+```
+
+
+```{r include=FALSE}
+# Plot
+plot(decomp.ma.CO2)
+```
+
+```{r include=FALSE}
+#### De-seasonalise 
+# Subtract the seasonal component
+ma.sa.CO2.ts = reduced.CO2.ts - decomp.ma.CO2$seasonal
+
+plot(ma.sa.CO2.ts, main = "Moving Average seasonally adjusted Cape Grim CO2",
+     xlab = "Quarter", ylab = "CO2 in ppm")
+```
+
+```{r include=FALSE}
+#### Build models
+(Time = 1:length(reduced.CO2.ts))
+```
+
+```{r include=FALSE}
+#### Linear - ma.CO2.fit1
+# Linear
+ma.CO2.fit1 = lm(ma.sa.CO2.ts ~ Time)
+
+plot.ts(residuals(ma.CO2.fit1), main = "Residual Series")
+points(which.min(residuals(ma.CO2.fit1)), y = min(residuals(ma.CO2.fit1)), col = "red")
+
+# Comments: Looking at the de-seasonalised data and the residual plot, it is very likely that a "break" had occurred at Time 50. Let's try to add a new Time.break variable.
+```
+
+
+
+```{r include=FALSE}
+#### Checking break point
+plot(x = Time, y = as.numeric(ma.sa.CO2.ts), type = "l",
+     main = "Moving Average seasonally adjusted Cape Grim CO2",
+     xlab = "Quarter", ylab = "CO2 in ppm")
+abline(ma.CO2.fit1, col = "red")
+abline(v = 50, lty = 3)
+```
+
+
+```{r include=FALSE}
+#### With break - ma.CO2.fit 2
+# Add Time.break to the linear model
+Time.break = c(rep(0, 49), Time[50:75] - Time[50])
+ma.CO2.fit2 = lm(ma.sa.CO2.ts ~ Time + Time.break)
+
+summary(ma.CO2.fit1)
+
+summary(ma.CO2.fit2)
+#### Comment: Looking at the summary output, we can clearly see the Time.break term is highly significant. The Multiplt R-squared has been improved too. So fit2 is better than fit1 for sure. 
+```
+
+
+```{r include=FALSE}
+
+#### Check fit 2 residuals
+plot.ts(residuals(ma.CO2.fit2), main = "Residual Series")
+
+#### Comment: Residual plot looks a lot more normal now, like white noise. But seems like we have some clustering indicating positive correlation.
+```
+
+
+```{r include=FALSE}
+#### Check Autocorrelation
+acf(residuals(ma.CO2.fit2))
+
+#### Comment: Autocorrelation is for sure a problem as we can see 3 significant lags. 
+```
+
+```{r include=FALSE}
+#### Lagged response - ma.co2.fit3
+ma.CO2.fit3 = lm(ma.sa.CO2.ts[-1] ~ Time[-1] + Time.break[-1] + ma.sa.CO2.ts[-75])
+summary(ma.CO2.fit3)
+```
+
+```{r include=FALSE}
+#### Check residuals
+plot.ts(residuals(ma.CO2.fit3), main = "Residual Series")
+#### Comment: Now the residual plot looks a lot more normal, having a mean around 0 with constant variance. 
+```
+
+
+```{r include=FALSE}
+#### Check autocorrelation
+acf(residuals(ma.CO2.fit3))
+#### Comment: It has been a lot better. We still have lag(1) and lag(11) being significant but its ok.
+```
+
+
+```{r include=FALSE}
+#### Check assumptions
+# Check normality
+library(s20x)
+normcheck(residuals(ma.CO2.fit3), shapiro.wilk = TRUE)
+```
+
+```{r include=FALSE}
+summary(ma.CO2.fit3)
+```
+
+```{r include=FALSE}
+#### Forecast using model CO2.ma.fit3
+t = 76
+
+# A function that calculates the predictions for a given t (time)
+ma.fit3.pred = function(t, previous){
+  
+  # initialise empty list
+  result = vector("list", length = 2)
+  
+  names(result) = c("t.sa.pred", "t.pred")
+  
+  # forecast
+  result$t.sa.pred = ma.CO2.fit3$coef[1] +
+    ma.CO2.fit3$coef[2] * t +
+    ma.CO2.fit3$coef[3] * (t - 50) +
+    ma.CO2.fit3$coef[4] * previous
+  
+  # Add back the seasonal component
+  s = ((t-1) %% 4) + 1
+  result$t.pred = result$t.sa.pred + decomp.ma.CO2$figure[s]
+ 
+  return(result)
+}
+
+ma.t76 = ma.fit3.pred(t = 76, previous = ma.sa.CO2.ts[76 - 1])
+
+ma.t77 = ma.fit3.pred(t = 77, previous = ma.t76$t.sa.pred)
+
+ma.t78 = ma.fit3.pred(t = 78, previous = ma.t77$t.sa.pred)
+
+ma.t79 = ma.fit3.pred(t = 79, previous = ma.t78$t.sa.pred)
+
+ma.pred = c(ma.t76$t.pred, ma.t77$t.pred, ma.t78$t.pred, ma.t79$t.pred)
+```
+
+```{r include=FALSE}
+#### RMSEP
+(RMSEP.ma.pred = sqrt(1/4 * sum((actual - ma.pred) ^ 2)))
+```
+
+
+
+```{r include = FALSE}
+decomp.stl.CO2 = stl(reduced.CO2.ts, s.window = "periodic")
+plot(decomp.stl.CO2, main = "Stl Decomposition of Cape Grim CO2")
+```
+
+```{r}
+#### Seasonal Tread Lowess
+# Seasonal estimates
+decomp.stl.CO2$time.series[1:4, 1]
+```
+
+#### Comment:
+The seasonal estimates from stl decomposition are showed above. We can see that, on average Quarter 1 has the smallest value of CO2 concentration while Quarter 3 has the largest. 
+
+
+
+```{r}
+# Subtract seasonal component
+stl.sa.CO2.ts = reduced.CO2.ts - decomp.stl.CO2$time.series[, 1]
+plot(stl.sa.CO2.ts, main = "STL seasonally adjusted Cape Grim CO2",
+     xlab = "Quarter", ylab = "CO2 (ppm)")
+```
+
+#### Comment:
+After removing the seasonal components, we can see a clear positive linear trend. Interestingly there are some small bumps in the data. We possibly have a "break" - change in slope somehwere around 2010. 
+
+#### Fit the best predicting model.
+```{r}
+stl.CO2.fit3 = lm(stl.sa.CO2.ts[-1] ~ Time[-1] + Time.break[-1] + stl.sa.CO2.ts[-75])
+summary(stl.CO2.fit3)
+```
+
+```{r include = FALSE}
+#### Check residuals plot
+plot.ts(residuals(stl.CO2.fit3), main = "Residual Series")
+#### Comment: Now the residual plot looks a lot more normal, having a mean around 0 with constant variance. 
+
+#### Check autocorrelation
+acf(residuals(stl.CO2.fit3))
+
+#### Comment: It has been a lot better. We still have lag(1) and lag(11) and lag (16) being significant but its ok.
+
+#### Check assumptions
+
+# Check normality
+library(s20x)
+normcheck(residuals(stl.CO2.fit3), shapiro.wilk = TRUE)
+```
+
+
+#### Prediction
+
+```{r include = FALSE}
+###### We are using a helper function that calculates the 2 predictions (both original and seasonally adjusted) for a given t (time), function returns a list.# stl.fit3.pred = function(t, previous){
+#   # t is the given time for prediction, previous is the Y(t-1)
+#   
+#   # initialise an empty list
+#   result = vector("list", length = 2)
+#   
+#   # This list will store both the seasonally adjusted predicted value for t, and predicted value for t
+#   names(result) = c("t.sa.pred", "t.pred")
+#   
+#   # predict seasonally adjusted value using the chosen model
+#   result$t.sa.pred = stl.CO2.fit3$coef[1] +
+#                      stl.CO2.fit3$coef[2] * t +
+#                      stl.CO2.fit3$coef[3] * (t - 50) +
+#                      stl.CO2.fit3$coef[4] * previous
+#   
+#   # Check which quarter is t 
+#   s = ((t - 1) %% 4) + 1
+#   
+#   # Add back the correct seasonal component s
+#   result$t.pred = result$t.sa.pred + decomp.stl.CO2$time.series[s, 1]
+#  
+#   # return the result list
+#   return(result)
+# }
+```
+
+
+```{r include = FALSE}
+# # Predict t76, here previous value is the last data from our de-seasonalised ts
+# stl.t76 = stl.fit3.pred(t = 76, previous = stl.sa.CO2.ts[76 - 1])
+# 
+# # Predict t77, here previous value is seasonally adjusted t76
+# stl.t77 = stl.fit3.pred(t = 77, previous = stl.t76$t.sa.pred)
+# 
+# # Predict t78, here previous value is seasonally adjusted t77
+# stl.t78 = stl.fit3.pred(t = 78, previous = stl.t77$t.sa.pred)
+# 
+# # Predict t79, here previous value is seasonally adjusted t78
+# stl.t79 = stl.fit3.pred(t = 79, previous = stl.t78$t.sa.pred)
+# 
+# # Put all 4 prediction values together
+# stl.pred = c(stl.t76$t.pred, stl.t77$t.pred, stl.t78$t.pred, stl.t79$t.pred)
+```
+
+
+```{r}
+t76.sa.pred = stl.CO2.fit3$coef[1] + stl.CO2.fit3$coef[2] * 76 +
+          stl.CO2.fit3$coef[3] * (76 - 50) + stl.CO2.fit3$coef[4] * stl.sa.CO2.ts[76 - 1]
+t76.pred = t76.sa.pred + decomp.stl.CO2$time.series[4, 1]
+
+t77.sa.pred = stl.CO2.fit3$coef[1] + stl.CO2.fit3$coef[2] * 77 +
+          stl.CO2.fit3$coef[3] * (77 - 50) + stl.CO2.fit3$coef[4] * t76.sa.pred
+t77.pred = t77.sa.pred + decomp.stl.CO2$time.series[1, 1]
+
+
+t78.sa.pred = stl.CO2.fit3$coef[1] + stl.CO2.fit3$coef[2] * 78 +
+          stl.CO2.fit3$coef[3] * (78 - 50) + stl.CO2.fit3$coef[4] * t77.sa.pred
+t78.pred = t78.sa.pred + decomp.stl.CO2$time.series[2, 1]
+
+
+t79.sa.pred = stl.CO2.fit3$coef[1] + stl.CO2.fit3$coef[2] * 79 +
+          stl.CO2.fit3$coef[3] * (79 - 50) + stl.CO2.fit3$coef[4] * t78.sa.pred
+t79.pred = t79.sa.pred + decomp.stl.CO2$time.series[3, 1]
+
+stl.pred = c(t76.pred, t77.pred, t78.pred, t79.pred)
+
+```
+
+#### Calculate RMSEP to compare actual values and predicted values
+```{r}
+(RMSEP.stl.pred = sqrt(1/4 * sum((actual - stl.pred) ^ 2)))
+```
+
+
+
+### Question 3. Technical Notes. 
+The seasonal estimates show that for the last 2 quarters, the CO2 concentration is above the overall trend with Quarter 3 being the largest(0.48 ppm).  And for the first 2 quarters, the CO2 concentration is below the overall trend with Quarter 1 being the lowest (-0.39 ppm). 
+
+The plot of the seasonally adjusted data shows a clear positive linear trend. Interestingly there is a "break" - change in slope somehwere around 2010. 
+
+The final model included a Time variable for the linear trend, a Time break variable for the change in slope and a lagged response variable to deal with the autocorrelation found in the residual series.
+
+For the final model, the plot of the autocorrelation function of the residuals still shows lags 1, 11 and 16 are slightly significant. It is ok to ignore them as they are small.
+
+The residual series shows no evidence of non-linearity. There is no evidence against the underlying errors having come from a noraml distribution (P-value = 0.834). So our residual series is normally distributed.
+
+
+All variables (time, time break and lagged response) in the model are highly significant with P-values almost close to 0. The F-statistic (P-value ≈ 0) also showed at least one of the variables is significantly important.
+
+The Multiple R2 is 0.9997 indicating that nearly 99.97% the variation in the seasonally adjusted CO2
+concentration is explained by the model. The model is a good fit. The residual standard error is 0.189 ppm so prediction intervals will be narrow. The model predictions can be relied on as the assumptions appear to be satisfied. 
+
+The RMSEP for the 2018.4-2019.3 predictions was 0.195 which was smaller than that for the moving
+average model (0.233). 
+
+Predictions are 2018.4: 406.00 ppm, 
+                2019.1: 406.07 ppm, 
+                2019.2 406.82 ppm, 
+                2019.3: 408.25 ppm.
+
+### Question 4. Use full data and predict for the 4 quarters of 2019.4 to 2020.3. 
+
+```{r include = FALSE}
+decomp.CO2 = stl(CO2.ts, s.window = "periodic")
+sa.CO2.ts = CO2.ts - decomp.CO2$time.series[, 1]
+Time.new = 1:length(CO2.ts)
+Time.break.new = c(rep(0, 49), Time.new[50:79] - Time.new[50])
+```
+
+
+```{r}
+CO2.fit4 = lm(sa.CO2.ts[-1] ~ Time.new[-1] + Time.break.new[-1] + sa.CO2.ts[-79])
+
+# Predict
+t80.sa.pred = CO2.fit4$coef[1] + CO2.fit4$coef[2] * 80 +
+          CO2.fit4$coef[3] * (80 - 50) + CO2.fit4$coef[4] * sa.CO2.ts[79]
+
+t80.pred = t80.sa.pred + decomp.CO2$time.series[4, 1]
+
+t81.sa.pred = CO2.fit4$coef[1] + CO2.fit4$coef[2] * 81 +
+          CO2.fit4$coef[3] * (81 - 50) + CO2.fit4$coef[4] * t80.sa.pred
+t81.pred = t81.sa.pred + decomp.CO2$time.series[1, 1]
+
+
+t82.sa.pred = CO2.fit4$coef[1] + CO2.fit4$coef[2] * 82 +
+          CO2.fit4$coef[3] * (82 - 50) + CO2.fit4$coef[4] * t81.sa.pred
+t82.pred = t82.sa.pred + decomp.CO2$time.series[2, 1]
+
+
+t83.sa.pred = CO2.fit4$coef[1] + CO2.fit4$coef[2] * 83 +
+          CO2.fit4$coef[3] * (83 - 50) + CO2.fit4$coef[4] * t82.sa.pred
+t83.pred = t83.sa.pred + decomp.CO2$time.series[3, 1]
+
+pred = c(t80.pred, t81.pred, t82.pred, t83.pred)
+
+names(pred) = c("2019.4","2020.1","2020.2","2020.3")
+
+pred
+```
+
+
+```{r}
+summary(CO2.fit4)
+```
+
+#### Comment:
+The model including the full data's Multiple R-squared is nearly 1 (0.9998). The residual standard error is small (0.1896 ppm) so the prediction intervals will be very narrow. The predictions should be reliable. 
