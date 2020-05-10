@@ -1,0 +1,40 @@
+---
+title: "A4"
+author: "Zoe Zhou"
+date: "11/05/2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The 5 univariate Time Series variables in that file are called TS1,
+TS2, TS3, TS4 and TS5. You do not need to create a time series object in R for the variables in this assignment.
+
+For each of the following 5 questions you are required to find the best Stationary Time Series Model for the specified series.
+
+
+```{r}
+all = read.table("Ass 4 Data.txt", header = TRUE)
+unlist(all)
+```
+
+#### Question 1:
+(i) A plot of the time series, a plot of the acf and a plot of the pacf. 
+```{r}
+plot.ts(all$TS1)
+acf(all$TS1)
+pacf(all$TS1)
+
+```
+
+(ii) The equation of the model you think is most appropriate, given the plots. Justify your choice of model.
+
+(iii) The R output and the estimated equation of your model. 
+
+
+(iv) A Time Series plot of the Residual Series and a plot of the acf of the residuals. Briefly comment on the plots. 
+
+
+(v) Check to determine whether there is a better stationary model for the time series. Only include any additional R output (as in (iii) – (iv) above) if you find a better model. Otherwise, just say which models you tried (e.g. AR(3), ARMA(2,1), etc), report their AIC value(s) and explain why they were rejected. Only try “sensible” models given what you found in the plots in part (i). 
